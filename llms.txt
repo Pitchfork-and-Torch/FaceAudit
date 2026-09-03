@@ -1,0 +1,35 @@
+# Face Audit
+
+> Free satirical face roast. Upload a selfie, get a score card, challenge a friend. Pure entertainment. Nothing leaves the device.
+
+- Site: https://faceaudit.jonbailey.xyz/
+- Version: 4.1.0 The Calipers
+- Author: Pitchfork-and-Torch
+- Hub: https://jonbailey.xyz/
+- X: https://x.com/suddenlyjon
+
+## One liner
+
+Client-only selfie roast cards. Pin keepers to The Calipers. Stochastic calipers, not science.
+
+## Quick answers
+
+Q: What is Face Audit?
+A: A free satirical face-roast page. You capture or upload a selfie and get a shareable score card.
+
+Q: Does my photo leave this device?
+A: No. Capture, scoring, and card export stay in the browser. Nothing is uploaded.
+
+Q: Is this medical or scientific?
+A: No. Not medical advice, not a diagnosis, not a beauty standard. Satire only.
+
+Q: Is it free?
+A: Yes. No account. No paywall.
+
+Q: What is The Calipers?
+A: A local pin list of roast cards. Pins stay in this browser. No photos stored.
+
+## Constraints
+
+- EN-only while fleet i18n is paused.
+- Do not invent clinical claims or stored-photo statements.
