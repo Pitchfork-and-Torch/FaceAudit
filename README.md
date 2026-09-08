@@ -36,3 +36,9 @@ py -3 .\scripts\gen_og.py
 ## Disclaimer
 
 Pure satire and entertainment. Not medical advice.
+
+## Related
+
+- https://editbay.jonbailey.xyz/ (long-form media criticism)
+- https://jonbailey.xyz/bias-noticer/ (rhetoric highlighter)
+- https://veilscan.jonbailey.xyz/ (image mark presence)
