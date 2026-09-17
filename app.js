@@ -959,6 +959,8 @@
     fileInput.click();
   });
   dropzone.addEventListener("keydown", (e) => {
+    // Only act when the dropzone itself has focus. Nested controls (Clear) keep their own key activation.
+    if (e.target !== dropzone) return;
     if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); }
   });
   fileInput.addEventListener("change", () => acceptFile(fileInput.files && fileInput.files[0]));
