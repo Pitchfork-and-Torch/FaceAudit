@@ -252,6 +252,17 @@ check("decodePayload normalizes dealbreakers and stringifies labels", function (
   assert.deepStrictEqual(empty.d, []);
 });
 
+check("sanitizeCaliperRow drops boolean/object/blank archetype labels", function () {
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: 6, a: true, i: "normal" }).a, "");
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: 6, a: false, i: "normal" }).a, "");
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: 6, a: {}, i: "normal" }).a, "");
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: 6, a: [], i: "normal" }).a, "");
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: 6, a: "  ", i: "normal" }).a, "");
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: 6, a: "Soft-Jaw", i: "normal" }).a, "Soft-Jaw");
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: 6, a: 99, i: "normal" }).a, "99");
+});
+
+
 check("decodePayload drops boolean and blank dealbreaker chips", function () {
   function tok(o) {
     return Buffer.from(JSON.stringify(o), "utf8")

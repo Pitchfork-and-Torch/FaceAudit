@@ -205,12 +205,20 @@
     if (!Number.isFinite(score)) return null;
     const id = String(row.id || "").slice(0, 96);
     if (!id) return null;
+    // Match decodePayload string fields: bool/object must not become
+    // "true" / "[object Object]" pin labels; blank strings collapse.
+    let archetype = "";
+    if (typeof row.a === "number" && Number.isFinite(row.a)) {
+      archetype = String(row.a).slice(0, 80);
+    } else if (typeof row.a === "string") {
+      archetype = row.a.trim().slice(0, 80);
+    }
     return {
       id: id,
       hash: String(row.hash || "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 4096),
       // Hand-edited or corrupt localStorage rows: keep pins in roast range.
       score: clampScore(score),
-      a: String(row.a || "").slice(0, 80),
+      a: archetype,
       i: String(row.i || "normal").slice(0, 16),
     };
   }
