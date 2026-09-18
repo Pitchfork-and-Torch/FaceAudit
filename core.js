@@ -266,11 +266,15 @@
   function decodePayload(token) {
     try {
       const p = JSON.parse(fromB64Url(token));
-      if (!p || typeof p.s !== "number" || !Number.isFinite(p.s)) return null;
+      if (!p || typeof p !== "object") return null;
+      // Hand-crafted #r= JSON sometimes stores score as a string ("6.5").
+      // Coerce before clamp so the challenge view still opens.
+      const score = Number(p.s);
+      if (!Number.isFinite(score)) return null;
       const blob = JSON.stringify(p);
       if (IMAGEISH.test(blob) || /data:image/i.test(blob)) return null;
       // Shared/pinned payloads can be hand-crafted; keep challenge scores in roast range.
-      p.s = clampScore(p.s);
+      p.s = clampScore(score);
       // Dealbreakers must be a string list. A hand-crafted string/object `d`
       // makes shared-panel forEach throw and the challenge view never opens.
       if (Array.isArray(p.d)) {

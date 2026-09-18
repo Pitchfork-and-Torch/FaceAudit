@@ -186,6 +186,21 @@ check("decodePayload clamps absurd shared scores into roast range", function () 
   assert.strictEqual(core.decodePayload(tok(6.26)).s, 6.3);
 });
 
+check("decodePayload coerces numeric-string scores into roast range", function () {
+  function tok(o) {
+    return Buffer.from(JSON.stringify(o), "utf8")
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
+  const fromString = core.decodePayload(tok({ s: "6.5", a: "X", r: "Y", d: ["Weak chin"] }));
+  assert.ok(fromString);
+  assert.strictEqual(fromString.s, 6.5);
+  assert.strictEqual(core.decodePayload(tok({ s: "99.5", a: "X" })).s, 9.7);
+  assert.strictEqual(core.decodePayload(tok({ s: "nope", a: "X" })), null);
+});
+
 check("decodePayload normalizes dealbreakers and stringifies labels", function () {
   function tok(o) {
     return Buffer.from(JSON.stringify(o), "utf8")
