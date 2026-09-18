@@ -64,6 +64,7 @@
   let lastMeasure = null;
   let lastFocus = null;
   let measurePromise = Promise.resolve(null);
+  let measureGen = 0;
 
   const FORMATS = {
     story: { w: 1080, h: 1920, label: "1080x1920 story" },
@@ -292,7 +293,9 @@
     dropzone.classList.add("has-image");
     auditBtn.disabled = false;
     faceWarn.classList.add("hidden");
-    measurePromise = runFaceHint(previewImg);
+    const gen = ++measureGen;
+    lastMeasure = null;
+    measurePromise = runFaceHint(previewImg, gen);
   }
 
   function clearPreview() {
@@ -307,6 +310,7 @@
     auditBtn.disabled = true;
     faceWarn.classList.add("hidden");
     fileInput.value = "";
+    measureGen += 1;
     lastMeasure = null;
     measurePromise = Promise.resolve(null);
   }
@@ -352,11 +356,12 @@
     }
   }
 
-  async function runFaceHint(img) {
+  async function runFaceHint(img, gen) {
     try {
       await waitImage(img);
       const luma = sampleLuma(img);
       const faces = await detectBoxes(img);
+      if (gen !== measureGen) return;
       lastMeasure = Core.measureFrame({
         imgW: img.naturalWidth,
         imgH: img.naturalHeight,
@@ -374,6 +379,7 @@
         faceWarn.classList.remove("hidden");
       }
     } catch {
+      if (gen !== measureGen) return;
       lastMeasure = Core.measureFrame({});
     }
   }
