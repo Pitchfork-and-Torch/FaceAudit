@@ -173,6 +173,19 @@ check("sanitizeCaliperRow clamps absurd pin scores into roast range", function (
   assert.strictEqual(core.sanitizeCaliperRow({ id: "mid", hash: "h", score: 6.26, a: "A", i: "normal" }).score, 6.3);
 });
 
+check("sanitizeCaliperRow rejects null/bool/array/blank scores (not floor 2.0)", function () {
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: null, a: "A", i: "normal" }), null);
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: true, a: "A", i: "normal" }), null);
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: false, a: "A", i: "normal" }), null);
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: [], a: "A", i: "normal" }), null);
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: {}, a: "A", i: "normal" }), null);
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: "", a: "A", i: "normal" }), null);
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: "  ", a: "A", i: "normal" }), null);
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: "6.5", a: "A", i: "normal" }).score, 6.5);
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "x", hash: "h", score: 6.5, a: "A", i: "normal" }).score, 6.5);
+});
+
+
 check("decodePayload clamps absurd shared scores into roast range", function () {
   function tok(s) {
     return Buffer.from(JSON.stringify({ s: s, a: "X", r: "Y" }), "utf8")

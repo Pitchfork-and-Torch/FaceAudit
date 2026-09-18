@@ -191,7 +191,17 @@
     for (let i = 0; i < keys.length; i++) {
       if (looksLikeImagePayload(row[keys[i]])) return null;
     }
-    const score = Number(row.score);
+    // Match decodePayload: Number(null)/Number(true)/Number([]) are finite
+    // (0/1/0) and would wrongly pin a caliper at the roast floor.
+    const rawScore = row.score;
+    let score;
+    if (typeof rawScore === "number") {
+      score = rawScore;
+    } else if (typeof rawScore === "string" && rawScore.trim() !== "") {
+      score = Number(rawScore);
+    } else {
+      return null;
+    }
     if (!Number.isFinite(score)) return null;
     const id = String(row.id || "").slice(0, 96);
     if (!id) return null;
