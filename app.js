@@ -309,6 +309,8 @@
   function setPreview(file) {
     if (objectUrl) URL.revokeObjectURL(objectUrl);
     currentFile = file;
+    // New bytes need a new roast seed. Clear/replace used to keep the prior file's hash.
+    seedBase = 0;
     objectUrl = URL.createObjectURL(file);
     previewImg.src = objectUrl;
     fileNameEl.textContent = file.name || "capture.jpg";
@@ -324,6 +326,7 @@
     if (objectUrl) URL.revokeObjectURL(objectUrl);
     objectUrl = null;
     currentFile = null;
+    seedBase = 0;
     previewImg.removeAttribute("src");
     fileNameEl.textContent = "—";
     dropzoneIdle.classList.remove("hidden");
