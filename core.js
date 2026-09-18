@@ -268,6 +268,8 @@
       if (!p || typeof p.s !== "number" || !Number.isFinite(p.s)) return null;
       const blob = JSON.stringify(p);
       if (IMAGEISH.test(blob) || /data:image/i.test(blob)) return null;
+      // Shared/pinned payloads can be hand-crafted; keep challenge scores in roast range.
+      p.s = clampScore(p.s);
       return p;
     } catch {
       return null;

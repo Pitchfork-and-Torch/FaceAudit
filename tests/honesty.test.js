@@ -167,6 +167,19 @@ check("decodePayload rejects junk and image-shaped JSON", function () {
   assert.strictEqual(core.decodePayload(sneaky), null);
 });
 
+check("decodePayload clamps absurd shared scores into roast range", function () {
+  function tok(s) {
+    return Buffer.from(JSON.stringify({ s: s, a: "X", r: "Y" }), "utf8")
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
+  assert.strictEqual(core.decodePayload(tok(99.5)).s, 9.7);
+  assert.strictEqual(core.decodePayload(tok(-10)).s, 2.0);
+  assert.strictEqual(core.decodePayload(tok(6.26)).s, 6.3);
+});
+
 check("loading copy does not pretend to measure bone", function () {
   const blob = core.LOADING_LINES.join(" ").toLowerCase();
   assert.ok(blob.indexOf("stochastic") !== -1);
