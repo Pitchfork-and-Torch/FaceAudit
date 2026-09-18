@@ -854,6 +854,7 @@
       uploadPanel.classList.add("hidden");
       resultsPanel.classList.add("hidden");
       loadingPanel.classList.add("hidden");
+      shareDock.classList.add("hidden");
       sharedPanel.classList.remove("hidden");
       $("#shared-score").textContent = Number(p.s).toFixed(1);
       $("#shared-verdict").textContent = p.r || "Shared verdict";
