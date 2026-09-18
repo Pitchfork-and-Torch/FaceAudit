@@ -186,6 +186,27 @@ check("decodePayload clamps absurd shared scores into roast range", function () 
   assert.strictEqual(core.decodePayload(tok(6.26)).s, 6.3);
 });
 
+check("decodePayload normalizes dealbreakers and stringifies labels", function () {
+  function tok(o) {
+    return Buffer.from(JSON.stringify(o), "utf8")
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
+  const asString = core.decodePayload(tok({ s: 5.2, d: "Weak chin", a: 99, r: null }));
+  assert.ok(asString);
+  assert.deepStrictEqual(asString.d, ["Weak chin"]);
+  assert.strictEqual(asString.a, "99");
+  assert.strictEqual(asString.r, "");
+  const messy = core.decodePayload(tok({ s: 4, d: [1, "", null, "Jaw width", { x: 1 }], t: { n: 1 } }));
+  assert.deepStrictEqual(messy.d, ["1", "Jaw width"]);
+  assert.strictEqual(messy.t, "");
+  const empty = core.decodePayload(tok({ s: 4, d: { nope: true } }));
+  assert.deepStrictEqual(empty.d, []);
+});
+
+
 check("loading copy does not pretend to measure bone", function () {
   const blob = core.LOADING_LINES.join(" ").toLowerCase();
   assert.ok(blob.indexOf("stochastic") !== -1);

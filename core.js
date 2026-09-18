@@ -271,6 +271,24 @@
       if (IMAGEISH.test(blob) || /data:image/i.test(blob)) return null;
       // Shared/pinned payloads can be hand-crafted; keep challenge scores in roast range.
       p.s = clampScore(p.s);
+      // Dealbreakers must be a string list. A hand-crafted string/object `d`
+      // makes shared-panel forEach throw and the challenge view never opens.
+      if (Array.isArray(p.d)) {
+        p.d = p.d
+          .map(function (x) {
+            if (x == null || typeof x === "object") return "";
+            return String(x).slice(0, 80);
+          })
+          .filter(Boolean)
+          .slice(0, 12);
+      } else if (typeof p.d === "string" && p.d.trim()) {
+        p.d = [p.d.trim().slice(0, 80)];
+      } else {
+        p.d = [];
+      }
+      p.a = typeof p.a === "string" || typeof p.a === "number" ? String(p.a).slice(0, 80) : "";
+      p.t = typeof p.t === "string" || typeof p.t === "number" ? String(p.t).slice(0, 160) : "";
+      p.r = typeof p.r === "string" || typeof p.r === "number" ? String(p.r).slice(0, 120) : "";
       return p;
     } catch {
       return null;
