@@ -268,8 +268,17 @@
       const p = JSON.parse(fromB64Url(token));
       if (!p || typeof p !== "object") return null;
       // Hand-crafted #r= JSON sometimes stores score as a string ("6.5").
-      // Coerce before clamp so the challenge view still opens.
-      const score = Number(p.s);
+      // Accept only real numbers or numeric strings. Number(null)/Number(true)
+      // are finite (0/1) and would wrongly open the challenge at the floor.
+      const rawScore = p.s;
+      let score;
+      if (typeof rawScore === "number") {
+        score = rawScore;
+      } else if (typeof rawScore === "string" && rawScore.trim() !== "") {
+        score = Number(rawScore);
+      } else {
+        return null;
+      }
       if (!Number.isFinite(score)) return null;
       const blob = JSON.stringify(p);
       if (IMAGEISH.test(blob) || /data:image/i.test(blob)) return null;

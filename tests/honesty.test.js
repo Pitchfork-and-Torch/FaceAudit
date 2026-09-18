@@ -201,6 +201,24 @@ check("decodePayload coerces numeric-string scores into roast range", function (
   assert.strictEqual(core.decodePayload(tok({ s: "nope", a: "X" })), null);
 });
 
+
+check("decodePayload rejects null/bool/array scores (not floor 2.0)", function () {
+  function tok(o) {
+    return Buffer.from(JSON.stringify(o), "utf8")
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
+  assert.strictEqual(core.decodePayload(tok({ s: null, a: "X" })), null);
+  assert.strictEqual(core.decodePayload(tok({ s: true, a: "X" })), null);
+  assert.strictEqual(core.decodePayload(tok({ s: false, a: "X" })), null);
+  assert.strictEqual(core.decodePayload(tok({ s: [], a: "X" })), null);
+  assert.strictEqual(core.decodePayload(tok({ s: {}, a: "X" })), null);
+  assert.ok(core.decodePayload(tok({ s: 6.5, a: "X" })));
+  assert.ok(core.decodePayload(tok({ s: "6.5", a: "X" })));
+});
+
 check("decodePayload normalizes dealbreakers and stringifies labels", function () {
   function tok(o) {
     return Buffer.from(JSON.stringify(o), "utf8")
