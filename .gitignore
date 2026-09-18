@@ -1,0 +1,9 @@
+node_modules/
+.wrangler/
+.vercel/
+dist/
+.DS_Store
+Thumbs.db
+.orbit/
+__pycache__/
+*.pyc

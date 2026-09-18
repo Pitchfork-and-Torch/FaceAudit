@@ -1,0 +1,24 @@
+name: pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stage site files
+        run: |
+          mkdir -p stage
+          rsync -a --exclude .git --exclude .github --exclude scripts --exclude deploy.ps1 --exclude NEXT.md --exclude README.md --exclude AGENTS.md --exclude CLAUDE.md --exclude vercel.json ./ stage/
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 75c71da18eeb801b3408c812742d6590
+          wranglerVersion: "4"
+          command: pages deploy stage --project-name=faceaudit-jonbailey
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
