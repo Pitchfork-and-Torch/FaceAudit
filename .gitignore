@@ -1,0 +1,11 @@
+node_modules/
+.wrangler/
+.vercel/
+dist/
+.DS_Store
+Thumbs.db
+.orbit/
+__pycache__/
+*.pyc
+.vercel_tok_clean
+7577922ed4d3ec3df303933b78cbd0ee.txt
