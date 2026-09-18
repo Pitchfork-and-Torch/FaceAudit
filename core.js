@@ -297,10 +297,13 @@
       // Dealbreakers must be a string list. A hand-crafted string/object `d`
       // makes shared-panel forEach throw and the challenge view never opens.
       if (Array.isArray(p.d)) {
+        // Booleans stringify to "true"/"false" chips; blank strings become empty chips.
+        // Keep finite numbers as labels (same as prior normalize). Reject the rest.
         p.d = p.d
           .map(function (x) {
-            if (x == null || typeof x === "object") return "";
-            return String(x).slice(0, 80);
+            if (typeof x === "number" && Number.isFinite(x)) return String(x).slice(0, 80);
+            if (typeof x !== "string") return "";
+            return x.trim().slice(0, 80);
           })
           .filter(Boolean)
           .slice(0, 12);

@@ -252,6 +252,24 @@ check("decodePayload normalizes dealbreakers and stringifies labels", function (
   assert.deepStrictEqual(empty.d, []);
 });
 
+check("decodePayload drops boolean and blank dealbreaker chips", function () {
+  function tok(o) {
+    return Buffer.from(JSON.stringify(o), "utf8")
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
+  const p = core.decodePayload(tok({
+    s: 5.2,
+    d: [true, false, "", "  ", "Chin", 1, null, { x: 1 }],
+    a: "X",
+  }));
+  assert.ok(p);
+  assert.deepStrictEqual(p.d, ["Chin", "1"]);
+});
+
+
 
 check("loading copy does not pretend to measure bone", function () {
   const blob = core.LOADING_LINES.join(" ").toLowerCase();
