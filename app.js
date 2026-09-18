@@ -1029,6 +1029,14 @@
     if (e.key === "Escape" && !cameraModal.classList.contains("hidden")) closeCamera();
   });
 
+  window.addEventListener("hashchange", () => {
+    // Calipers set location.hash; browser Back/Forward must re-hydrate the shared panel.
+    if (tryLoadSharedFromHash()) return;
+    sharedPanel.classList.add("hidden");
+    if (resultsPanel.classList.contains("hidden") && loadingPanel.classList.contains("hidden")) {
+      uploadPanel.classList.remove("hidden");
+    }
+  });
   tryLoadSharedFromHash();
   renderCalipers();
   if (document.fonts && document.fonts.ready) {
