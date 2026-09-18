@@ -198,7 +198,8 @@
     return {
       id: id,
       hash: String(row.hash || "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 4096),
-      score: Math.round(score * 10) / 10,
+      // Hand-edited or corrupt localStorage rows: keep pins in roast range.
+      score: clampScore(score),
       a: String(row.a || "").slice(0, 80),
       i: String(row.i || "normal").slice(0, 16),
     };

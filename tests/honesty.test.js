@@ -167,6 +167,12 @@ check("decodePayload rejects junk and image-shaped JSON", function () {
   assert.strictEqual(core.decodePayload(sneaky), null);
 });
 
+check("sanitizeCaliperRow clamps absurd pin scores into roast range", function () {
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "hi", hash: "h", score: 99.5, a: "A", i: "normal" }).score, 9.7);
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "lo", hash: "h", score: -10, a: "A", i: "normal" }).score, 2.0);
+  assert.strictEqual(core.sanitizeCaliperRow({ id: "mid", hash: "h", score: 6.26, a: "A", i: "normal" }).score, 6.3);
+});
+
 check("decodePayload clamps absurd shared scores into roast range", function () {
   function tok(s) {
     return Buffer.from(JSON.stringify({ s: s, a: "X", r: "Y" }), "utf8")
